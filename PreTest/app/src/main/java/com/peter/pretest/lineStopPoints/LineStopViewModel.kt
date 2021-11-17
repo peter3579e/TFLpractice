@@ -83,4 +83,9 @@ class LineStopViewModel(private val pretestRepository: PretestRepository, name: 
         return array
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
 }

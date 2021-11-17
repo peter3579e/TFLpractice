@@ -15,10 +15,9 @@ import androidx.core.content.PermissionChecker
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.peter.pretest.PretestApplication
-import com.peter.pretest.data.ArrivalInfo
-import com.peter.pretest.data.Result
-import com.peter.pretest.data.StopPoints
+import com.peter.pretest.data.*
 import com.peter.pretest.data.source.PretestRepository
+import com.peter.pretest.util.TimeUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -42,6 +41,14 @@ class MainPageViewModel(private val pretestRepository: PretestRepository) : View
     private val _arrivalInfo = MutableLiveData<List<ArrivalInfo>>()
     val arrivalInfo: MutableLiveData<List<ArrivalInfo>>
         get() = _arrivalInfo
+
+    var emptyStationList = ArrayList<ArrivalandStation>()
+
+
+    var stations = ArrayList<Source>()
+
+
+    var stationWithInfo = ArrayList<ArrivalandStation>()
 
 
 
@@ -78,6 +85,41 @@ class MainPageViewModel(private val pretestRepository: PretestRepository) : View
                 else -> null
             }
         }
+    }
+
+    fun changeTimeFormat(list: List<ArrivalInfo>) : ArrayList<ArrivalandStation> {
+        var arrival = ArrayList<ArrivalInfo>()
+        var name = ""
+        for (it in list){
+            name = it.stationName!!
+            if (arrival.size < 3){
+                val time = it.expectedArrival?.let { times ->
+                    TimeUtil.stampToTime(times)
+                }
+                it.expectedArrival = time
+                arrival.add(it)
+            }
+        }
+
+        arrival.sortWith(compareBy<ArrivalInfo>{it.expectedArrival})
+
+        stations.forEachIndexed { index, source ->
+            if (source.commonName == name){
+                stationWithInfo[index] = ArrivalandStation(source, arrival)
+            }
+        }
+
+        return stationWithInfo
+    }
+
+
+    fun fetchArrivalInfo (list: StopPoints) {
+        list.stop.forEach {
+            getArrivalInfo(it.id!!)
+            stations.add(it)
+            stationWithInfo.add(ArrivalandStation())
+        }
+        emptyStationList = stationWithInfo
     }
 
 

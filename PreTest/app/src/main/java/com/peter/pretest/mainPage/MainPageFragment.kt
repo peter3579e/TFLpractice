@@ -36,19 +36,10 @@ class MainPageFragment : Fragment() {
 
     private var lat: Double = 0.0
 
-    private var arrival = ArrayList<ArrivalInfo>()
-
-    private var size = 0
-
-    private var stations = ArrayList<Source>()
-
-    private var stationWithInfo = ArrayList<ArrivalandStation>()
 
     lateinit var mainHandler: Handler
 
     lateinit var updateTextTask: Runnable
-
-    private var emptyStationList = ArrayList<ArrivalandStation>()
 
 
     override fun onStart() {
@@ -74,12 +65,10 @@ class MainPageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        stationWithInfo = arrayListOf()
-        arrival = arrayListOf()
-        stations = arrayListOf()
+        viewModel.stationWithInfo = arrayListOf()
+        viewModel.stations = arrayListOf()
         viewModel.arrivalInfo.value = null
 
-        Log.d("peter","station with info = $stationWithInfo arrival =  $arrival")
 
         binding = FragmentMainpageBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
@@ -101,62 +90,26 @@ class MainPageFragment : Fragment() {
 
         viewModel.stationList.observe(viewLifecycleOwner, Observer { stationList ->
             stationList?.let {
-                size = stationList.stop.size
-                stationList.stop.forEach {
-                    viewModel.getArrivalInfo(it.id!!)
-                    stations.add(it)
-                  stationWithInfo.add(ArrivalandStation())
-                }
-                emptyStationList = stationWithInfo
+                viewModel.fetchArrivalInfo(it)
             }
         })
 
-        updateTextTask = object : Runnable {
+        object : Runnable {
             override fun run() {
                 mainHandler.postDelayed(this, 30000)
-                stationWithInfo = emptyStationList
-                    stations.forEach {
-                        viewModel.getArrivalInfo(it.id!!)
-                    }
+                viewModel.stationWithInfo = viewModel.emptyStationList
+                viewModel.stations .forEach {
+                    viewModel.getArrivalInfo(it.id!!)
+                }
             }
-        }
-
-        var name = ""
-
+        }.also { updateTextTask = it }
 
         viewModel.arrivalInfo.observe(viewLifecycleOwner, Observer {
             it?.let {
-                Log.d("peter","here has run 3 + $it")
-                //change the time format
-                for (arrivalInfo in it) {
-                    name = arrivalInfo.stationName!!
-                    if (arrival.size < 3)  {
-//                    if (arrivalInfo.direction == "inbound" && arrival.size < 3) {
-                        val time = arrivalInfo.expectedArrival?.let { it1 ->
-                            TimeUtil.stampToTime(it1)
-                        }
-                        arrivalInfo.expectedArrival = time
-                        arrival.add(arrivalInfo)
-                    }
-                }
-
-              arrival.sortWith(compareBy<ArrivalInfo> {it.expectedArrival})
-
-                stations.forEachIndexed { index, source ->
-                    if (source.commonName == name){
-                        stationWithInfo[index] = ArrivalandStation(source,arrival)
-                    }
-                }
-
-                arrival = arrayListOf()
-
-                Log.d("peter","$stationWithInfo")
-
-                adapter.submitList(stationWithInfo)
+                adapter.submitList(viewModel.changeTimeFormat(it))
                 adapter.notifyDataSetChanged()
             }
         })
-
 
         return binding.root
     }
