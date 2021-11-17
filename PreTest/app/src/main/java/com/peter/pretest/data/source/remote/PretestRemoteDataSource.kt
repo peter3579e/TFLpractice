@@ -30,7 +30,7 @@ object PretestRemoteDataSource : PretestDataSource {
 
         return try {
 
-            val result = PreTestApi.retrofitService.getNearByStation(lat,lon,radius)
+            val result = PreTestApi.retrofitService.getNearByStation(lat, lon, radius)
 
             com.peter.pretest.data.Result.Success(result)
         } catch (e: Exception) {

@@ -25,13 +25,45 @@
             android:layout_marginLeft="40dp" />
         <androidx.cardview.widget.CardView
             android:id="@+id/marker"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             app:cardCornerRadius="10dp"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/line"
             app:layout_constraintEnd_toEndOf="@id/line"
             app:layout_constraintTop_toTopOf="@id/line"
+            app:layout_constraintBottom_toBottomOf="@id/line">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/logo_blue_circle"/>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/markerTop"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:cardCornerRadius="10dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/line"
+            app:layout_constraintEnd_toEndOf="@id/line"
+            app:layout_constraintTop_toTopOf="@id/line">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/logo_blue_circle"/>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/markerBottom"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintStart_toStartOf="@id/line"
+            app:layout_constraintEnd_toEndOf="@id/line"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/line">
 
             <ImageView

@@ -2,6 +2,7 @@ package com.peter.pretest.mainPage
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -36,6 +37,7 @@ class MainPageFragment : Fragment() {
 
     private var lat: Double = 0.0
 
+    private val REQUEST_CODE = 101
 
     lateinit var mainHandler: Handler
 
@@ -48,21 +50,21 @@ class MainPageFragment : Fragment() {
     }
 
     private fun startLocationPermissionRequest() {
-    try {
-        if (ContextCompat.checkSelfPermission(PretestApplication.instance.baseContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 101)
-        }else{
-            viewModel.getLocation(PretestApplication.instance.baseContext)
+        try {
+            if (ContextCompat.checkSelfPermission(PretestApplication.instance.baseContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
+            } else {
+                viewModel.getLocation(PretestApplication.instance.baseContext)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
 
         viewModel.stationWithInfo = arrayListOf()
@@ -78,11 +80,20 @@ class MainPageFragment : Fragment() {
         mainHandler = Handler(Looper.getMainLooper())
         viewModel.location.observe(viewLifecycleOwner, Observer {
             it?.let {
-                if (lon != it.longitude && lat != it.latitude){
+                if (lon != it.longitude && lat != it.latitude) {
                     lon = it.longitude
                     lat = it.latitude
-                    Log.d("peter","lon = ${it.longitude} and lat = ${it.latitude}")
-                    viewModel.getNearByStation(it.latitude,it.longitude,400)
+
+                    Log.d("peter","the detected location lon = $lon lng = $lat")
+
+
+                    if (viewModel.isMarkerOutsideCircle(51.52804,-0.12908,lat,lon,30000.0)) {
+                        Log.d("peter","it is outside")
+                        viewModel.getNearByStation(51.52804,-0.12908,400)
+                    }else{
+                        viewModel.getNearByStation(it.latitude, it.longitude, 400)
+                    }
+
                 }
             }
         })
@@ -98,7 +109,7 @@ class MainPageFragment : Fragment() {
             override fun run() {
                 mainHandler.postDelayed(this, 30000)
                 viewModel.stationWithInfo = viewModel.emptyStationList
-                viewModel.stations .forEach {
+                viewModel.stations.forEach {
                     viewModel.getArrivalInfo(it.id!!)
                 }
             }
@@ -128,7 +139,7 @@ class MainPageFragment : Fragment() {
             requestCode: Int, permissions: Array<String>,
             grantResults: IntArray
     ) {
-        if (requestCode == 101) {
+        if (requestCode == REQUEST_CODE) {
             when {
                 grantResults.isEmpty() -> {
                     // If user interaction was interrupted, the permission request is cancelled and you
@@ -142,9 +153,6 @@ class MainPageFragment : Fragment() {
             }
         }
     }
-
-
-
 
 
 }

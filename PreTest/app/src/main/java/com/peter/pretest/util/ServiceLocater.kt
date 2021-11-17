@@ -7,6 +7,7 @@ import com.peter.pretest.data.source.PretestDataSource
 import com.peter.pretest.data.source.PretestRepository
 import com.peter.pretest.data.source.local.PretestLocalDataSource
 import com.peter.pretest.data.source.remote.PretestRemoteDataSource
+
 /**
  * A Service Locator for the [PretestRepository].
  */
@@ -19,7 +20,6 @@ object ServiceLocater {
     fun provideTasksRepository(context: Context): PretestRepository {
         synchronized(this) {
             return preTestRepository
-                ?: preTestRepository
                 ?: createPretestRepository(context)
         }
     }

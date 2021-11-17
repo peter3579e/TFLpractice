@@ -61,23 +61,23 @@ interface PreTestApiService {
     suspend fun getNearByStation(
         @Query("lat") lat: Double? = null,
         @Query("lon") lon: Double? = null,
-        @Query("radius") radius:Int? = null,
-        @Query("stopTypes") stopTypes:String? = "NaptanMetroStation",
-        @Query("useStopPointHierarchy") useStopPointHierarchy:Boolean? = true,
+        @Query("radius") radius: Int? = null,
+        @Query("stopTypes") stopTypes: String? = "NaptanMetroStation",
+        @Query("useStopPointHierarchy") useStopPointHierarchy: Boolean? = true,
         @Query("app_key") app_Key: String? = appKey
     ): StopPoints
 
 
     @GET("StopPoint/{id}/Arrivals")
     suspend fun getArrivalInfo(
-            @Path ("id") id: String,
-            @Query("app_key") app_Key: String? = appKey
+        @Path("id") id: String,
+        @Query("app_key") app_Key: String? = appKey
     ): List<ArrivalInfo>
 
     @GET("Line/{id}/Route/Sequence/inbound")
     suspend fun getLineSequence(
-            @Path ("id") stationName: String,
-            @Query("app_key") app_Key: String? = appKey
+        @Path("id") stationName: String,
+        @Query("app_key") app_Key: String? = appKey
     ): LineSequence
 
 

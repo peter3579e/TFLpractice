@@ -24,6 +24,9 @@
         <argument
             android:name="toward"
             app:argType="string"/>
+        <argument
+            android:name="currentLocation"
+            app:argType="string"/>
     </fragment>
 
     <action android:id="@+id/navigate_to_linePoints_fragment" app:destination="@id/lineStopPointsFragment"/>

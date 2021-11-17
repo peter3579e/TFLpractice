@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.peter.pretest.data.ArrivalandStation
 import com.peter.pretest.databinding.ItemStationsCellBinding
 
-class StationAdapter() : ListAdapter<ArrivalandStation,StationAdapter.ViewHolder>(DiffCallback) {
+class StationAdapter() : ListAdapter<ArrivalandStation, StationAdapter.ViewHolder>(DiffCallback) {
 
 
     class ViewHolder(private var binding: ItemStationsCellBinding) :
@@ -25,7 +25,7 @@ class StationAdapter() : ListAdapter<ArrivalandStation,StationAdapter.ViewHolder
             itemView.setOnClickListener {
                 if (count % 2 == 0) {
                     binding.hiddenBox.visibility = View.VISIBLE
-                }else {
+                } else {
                     binding.hiddenBox.visibility = View.GONE
                 }
                 count++
@@ -38,25 +38,31 @@ class StationAdapter() : ListAdapter<ArrivalandStation,StationAdapter.ViewHolder
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-                ItemStationsCellBinding.inflate(
+            ItemStationsCellBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-                )
+            )
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.bind(getItem(position))
+        holder.bind(getItem(position))
     }
 
 
     companion object DiffCallback : DiffUtil.ItemCallback<ArrivalandStation>() {
-        override fun areItemsTheSame(oldItem: ArrivalandStation, newItem: ArrivalandStation): Boolean {
+        override fun areItemsTheSame(
+            oldItem: ArrivalandStation,
+            newItem: ArrivalandStation
+        ): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: ArrivalandStation, newItem: ArrivalandStation): Boolean {
+        override fun areContentsTheSame(
+            oldItem: ArrivalandStation,
+            newItem: ArrivalandStation
+        ): Boolean {
             return oldItem.source!!.id == newItem.source!!.id
         }
     }

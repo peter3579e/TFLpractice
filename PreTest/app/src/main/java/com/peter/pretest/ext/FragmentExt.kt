@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import com.peter.pretest.PretestApplication
 import com.peter.pretest.factory.LineStopViewModelFactory
 import com.peter.pretest.factory.ViewModelFactory
+
 /**
  *
  * Extension functions for Fragment.
@@ -13,7 +14,12 @@ fun Fragment.getVmFactory(): ViewModelFactory {
     return ViewModelFactory(repository)
 }
 
-fun Fragment.getVmFactory(name:String, currentName: String, toward: String): LineStopViewModelFactory{
+fun Fragment.getVmFactory(
+    name: String,
+    currentName: String,
+    toward: String,
+    currentLocation:String
+): LineStopViewModelFactory {
     val repository = (requireContext().applicationContext as PretestApplication).preTestRepository
-    return LineStopViewModelFactory(name, currentName, toward, repository)
+    return LineStopViewModelFactory(name, currentName, toward, currentLocation, repository)
 }

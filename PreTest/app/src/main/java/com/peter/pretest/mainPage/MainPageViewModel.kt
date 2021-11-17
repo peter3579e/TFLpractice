@@ -1,17 +1,11 @@
 package com.peter.pretest.mainPage
 
-import android.Manifest
-import android.app.Activity
 import android.content.Context
-import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.util.Log
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.peter.pretest.PretestApplication
@@ -38,6 +32,9 @@ class MainPageViewModel(private val pretestRepository: PretestRepository) : View
     val location: MutableLiveData<Location>
         get() = _location
 
+
+
+
     private val _arrivalInfo = MutableLiveData<List<ArrivalInfo>>()
     val arrivalInfo: MutableLiveData<List<ArrivalInfo>>
         get() = _arrivalInfo
@@ -51,7 +48,6 @@ class MainPageViewModel(private val pretestRepository: PretestRepository) : View
     var stationWithInfo = ArrayList<ArrivalandStation>()
 
 
-
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
@@ -59,7 +55,7 @@ class MainPageViewModel(private val pretestRepository: PretestRepository) : View
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
 
-   fun getNearByStation(lat: Double, lon: Double, radius: Int) {
+    fun getNearByStation(lat: Double, lon: Double, radius: Int) {
         coroutineScope.launch {
             val result = pretestRepository.getNearbyStation(lat, lon, radius)
 
@@ -73,26 +69,43 @@ class MainPageViewModel(private val pretestRepository: PretestRepository) : View
         }
     }
 
+    fun isMarkerOutsideCircle(
+        centerLat:Double,
+        centerLng:Double,
+        currentLat: Double,
+        currentLng: Double,
+        radius: Double
+    ): Boolean {
+        val distances = FloatArray(1)
+        Location.distanceBetween(
+            centerLat,
+            centerLng,
+            currentLat,
+            currentLng, distances
+        )
+        return radius < distances[0]
+    }
+
     fun getArrivalInfo(id: String) {
         coroutineScope.launch {
             val result = pretestRepository.getArrivalInfo(id)
 
             when (result) {
                 is Result.Success -> {
-                    Log.d("peter","here has run viewModel")
-                   _arrivalInfo.value =  result.data
+                    _arrivalInfo.value = result.data
+                    Log.d("peter", "here has run viewModel = ${result.data}")
                 }
                 else -> null
             }
         }
     }
 
-    fun changeTimeFormat(list: List<ArrivalInfo>) : ArrayList<ArrivalandStation> {
+    fun changeTimeFormat(list: List<ArrivalInfo>): ArrayList<ArrivalandStation> {
         var arrival = ArrayList<ArrivalInfo>()
         var name = ""
-        for (it in list){
+        for (it in list) {
             name = it.stationName!!
-            if (arrival.size < 3){
+            if (arrival.size < 3) {
                 val time = it.expectedArrival?.let { times ->
                     TimeUtil.stampToTime(times)
                 }
@@ -101,10 +114,10 @@ class MainPageViewModel(private val pretestRepository: PretestRepository) : View
             }
         }
 
-        arrival.sortWith(compareBy<ArrivalInfo>{it.expectedArrival})
+        arrival.sortWith(compareBy<ArrivalInfo> { it.expectedArrival })
 
         stations.forEachIndexed { index, source ->
-            if (source.commonName == name){
+            if (source.commonName == name) {
                 stationWithInfo[index] = ArrivalandStation(source, arrival)
             }
         }
@@ -113,7 +126,7 @@ class MainPageViewModel(private val pretestRepository: PretestRepository) : View
     }
 
 
-    fun fetchArrivalInfo (list: StopPoints) {
+    fun fetchArrivalInfo(list: StopPoints) {
         list.stop.forEach {
             getArrivalInfo(it.id!!)
             stations.add(it)
@@ -123,7 +136,7 @@ class MainPageViewModel(private val pretestRepository: PretestRepository) : View
     }
 
 
-    fun getLocation(context:Context) {
+    fun getLocation(context: Context) {
 
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -131,9 +144,15 @@ class MainPageViewModel(private val pretestRepository: PretestRepository) : View
             _location.value = location
         }
         try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0f,locationListener)
-        } catch (ex:SecurityException) {
-            Toast.makeText(PretestApplication.instance.baseContext, "error", Toast.LENGTH_SHORT).show()
+            locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                1000,
+                0f,
+                locationListener
+            )
+        } catch (ex: SecurityException) {
+            Toast.makeText(PretestApplication.instance.baseContext, "error", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 

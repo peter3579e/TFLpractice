@@ -12,9 +12,9 @@ import com.peter.pretest.data.StopPoints
 
 interface PretestRepository {
 
-    suspend fun getNearbyStation(lat: Double, lon: Double, radius: Int, ): Result<StopPoints>
+    suspend fun getNearbyStation(lat: Double, lon: Double, radius: Int): Result<StopPoints>
 
-    suspend fun getArrivalInfo(id:String): Result<List<ArrivalInfo>>
+    suspend fun getArrivalInfo(id: String): Result<List<ArrivalInfo>>
 
     suspend fun getLineSequence(stationName: String): Result<LineSequence>
 

@@ -18,7 +18,7 @@ class LineAdapter : ListAdapter<ArrivalInfo, LineAdapter.ViewHolder>(DiffCallbac
 
 
     class ViewHolder(private var binding: ItemLineCellsBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(arrivalInfo: ArrivalInfo) {
             binding.info = arrivalInfo
             binding.executePendingBindings()
@@ -29,20 +29,24 @@ class LineAdapter : ListAdapter<ArrivalInfo, LineAdapter.ViewHolder>(DiffCallbac
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-                ItemLineCellsBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                )
+            ItemLineCellsBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
         holder.itemView.setOnClickListener {
-            if (true)
             it.findNavController().navigate(
-                    NavigationDirections.navigateToLinePointsFragment(getItem(position).lineName!!,getItem(position).stationName!!,"Richmond Underground Station")
+                NavigationDirections.navigateToLinePointsFragment(
+                    getItem(position).lineName!!,
+                    getItem(position).stationName!!,
+                    getItem(position).destinationName!!,
+                    getItem(position).currentLocation!!
+                )
             )
         }
     }

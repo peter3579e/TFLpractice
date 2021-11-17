@@ -10,7 +10,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class LineStopViewModel(private val pretestRepository: PretestRepository, name: String, toward:String, currentName: String):ViewModel() {
+class LineStopViewModel(
+    private val pretestRepository: PretestRepository,
+    name: String,
+    toward: String,
+    currentName: String,
+    currentLocation: String
+) : ViewModel() {
 
     val lineName = name
 
@@ -18,7 +24,9 @@ class LineStopViewModel(private val pretestRepository: PretestRepository, name: 
 
     val destination = toward
 
-    var idMap = hashMapOf<String,String>()
+    val currenLocation = currentLocation
+
+    var idMap = hashMapOf<String, String>()
 
     private val _lineSequence = MutableLiveData<LineSequence>()
     val lineSequence: MutableLiveData<LineSequence>
@@ -27,7 +35,7 @@ class LineStopViewModel(private val pretestRepository: PretestRepository, name: 
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
-    val map : HashMap<String,String> = hashMapOf()
+    val map: HashMap<String, String> = hashMapOf()
 
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -43,38 +51,38 @@ class LineStopViewModel(private val pretestRepository: PretestRepository, name: 
 
             when (result) {
                 is Result.Success -> {
-                    _lineSequence.value =  result.data
-                    Log.d("peter","here has run viewModel = ${result.data}")
+                    _lineSequence.value = result.data
+                    Log.d("peter", "here has run viewModel = ${result.data}")
                 }
                 else -> null
             }
         }
     }
 
-    fun putIntoMap (list : List<Lines>): HashMap<String,String>{
+    fun putIntoMap(list: List<Lines>): HashMap<String, String> {
         for (line in list) {
-            if (!map.containsKey(line.id) && !map.containsValue(line.name)){
-                map.put(line.id!!,line.name!!)
+            if (!map.containsKey(line.id) && !map.containsValue(line.name)) {
+                map.put(line.id!!, line.name!!)
             }
         }
         return map
     }
 
-    fun findLine (routList : List<Route>): ArrayList<String>{
-        var lineMap = hashMapOf<Int,String>()
+    fun findLine(routList: List<Route>): ArrayList<String> {
+        var lineMap = hashMapOf<Int, String>()
         var array = arrayListOf<String>()
 
         routList.forEach { route ->
-            for (i in route.naptanIds!!.indices){
-                lineMap.put(i , idMap[route.naptanIds!![i]]!!)
+            for (i in route.naptanIds!!.indices) {
+                lineMap.put(i, idMap[route.naptanIds!![i]]!!)
                 array.add(idMap[route.naptanIds!![i]]!!)
             }
 
-            Log.d("peter","the viewModel array = $array")
+            Log.d("peter", "the viewModel array = $array")
 
-            if (lineMap.containsValue(currentStationName) && lineMap.containsValue(destination)){
+            if (lineMap.containsValue(currentStationName) && lineMap.containsValue(destination)) {
                 return array
-            }else{
+            } else {
                 lineMap = hashMapOf()
                 array = arrayListOf()
             }

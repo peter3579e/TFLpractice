@@ -15,8 +15,12 @@ class DefaultPreTestRepository(
     private val pretestLocalDataSource: PretestDataSource
 ) : PretestRepository {
 
-    override suspend fun getNearbyStation(lat: Double, lon: Double, radius: Int): Result<StopPoints> {
-        return pretestRemoteDataSource.getNearbyStation(lat, lon, radius )
+    override suspend fun getNearbyStation(
+        lat: Double,
+        lon: Double,
+        radius: Int
+    ): Result<StopPoints> {
+        return pretestRemoteDataSource.getNearbyStation(lat, lon, radius)
     }
 
     override suspend fun getArrivalInfo(id: String): Result<List<ArrivalInfo>> {
