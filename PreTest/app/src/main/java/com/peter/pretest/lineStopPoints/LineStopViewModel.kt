@@ -52,7 +52,6 @@ class LineStopViewModel(
             when (result) {
                 is Result.Success -> {
                     _lineSequence.value = result.data
-                    Log.d("peter", "here has run viewModel = ${result.data}")
                 }
                 else -> null
             }
@@ -78,7 +77,6 @@ class LineStopViewModel(
                 array.add(idMap[route.naptanIds!![i]]!!)
             }
 
-            Log.d("peter", "the viewModel array = $array")
 
             if (lineMap.containsValue(currentStationName) && lineMap.containsValue(destination)) {
                 return array

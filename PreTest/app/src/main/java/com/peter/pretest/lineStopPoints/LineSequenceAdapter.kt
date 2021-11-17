@@ -25,10 +25,7 @@ class LineSequenceAdapter(private val currentLocation: String, private val curre
             binding.nameStations = stationNames
 
             if (currentLocation == stationNames && currentLocation.length == stationNames.length) {
-                Log.d(
-                    "peter",
-                    "same has run currentlocation $currentLocation and stationName = $stationNames"
-                )
+
                 binding.name.typeface = Typeface.DEFAULT_BOLD
                 binding.name.setTextColor(Color.BLACK)
             } else {
@@ -36,10 +33,9 @@ class LineSequenceAdapter(private val currentLocation: String, private val curre
                 binding.name.setTextColor(Color.GRAY)
             }
 
+            // for checking the status of between
             if (currentTrainLocation.contains("Between")){
-                Log.d("peter","yes it contains")
 
-                Log.d("peter","the string array = ${PretestFunction.removeSpace(currentTrainLocation)}")
                 val str = PretestFunction.removeSpace(currentTrainLocation)[PretestFunction.removeSpace(currentTrainLocation).lastIndex]
                 if (stationNames.contains(str)){
                     binding.markerTop.visibility = View.VISIBLE
@@ -48,6 +44,7 @@ class LineSequenceAdapter(private val currentLocation: String, private val curre
                 }
             }
 
+            // for checking the status of At Platform
             if (currentTrainLocation == "At Platform"){
                 if (currentLocation == stationNames && currentLocation.length == stationNames.length){
                     binding.marker.visibility = View.VISIBLE
@@ -56,9 +53,9 @@ class LineSequenceAdapter(private val currentLocation: String, private val curre
                 }
             }
 
+            // for checking the status of At
             if (currentTrainLocation.contains("At") && currentTrainLocation != "At Platform"){
                 val str = PretestFunction.findName(currentTrainLocation)
-                Log.d("peter","the return str = $str")
                 if (stationNames.contains(str)){
                     binding.marker.visibility = View.VISIBLE
                 }else{
@@ -66,9 +63,9 @@ class LineSequenceAdapter(private val currentLocation: String, private val curre
                 }
             }
 
+            // for checking the status of Approaching
             if (currentTrainLocation.contains("Approaching")){
                 val str = PretestFunction.findApproachName(currentTrainLocation)
-                Log.d("peter","the return str = $str")
                 if (stationNames.contains(str)){
                     binding.markerTop.visibility = View.VISIBLE
                 }else{
@@ -76,9 +73,9 @@ class LineSequenceAdapter(private val currentLocation: String, private val curre
                 }
             }
 
+            // for checking the status of Left
             if (currentTrainLocation.contains("Left")){
                 val str = PretestFunction.findLeftName(currentTrainLocation)
-                Log.d("peter","the return str = $str")
                 if (stationNames.contains(str)){
                     binding.markerBottom.visibility = View.VISIBLE
                 }else{

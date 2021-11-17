@@ -62,7 +62,6 @@ class MainPageViewModel(private val pretestRepository: PretestRepository) : View
             when (result) {
                 is Result.Success -> {
                     _stationList.value = result.data
-                    Log.d("peter", "the received value = ${result.data}")
                 }
                 else -> null
             }
@@ -93,7 +92,6 @@ class MainPageViewModel(private val pretestRepository: PretestRepository) : View
             when (result) {
                 is Result.Success -> {
                     _arrivalInfo.value = result.data
-                    Log.d("peter", "here has run viewModel = ${result.data}")
                 }
                 else -> null
             }

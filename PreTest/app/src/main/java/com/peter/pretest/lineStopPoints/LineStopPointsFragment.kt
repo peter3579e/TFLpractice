@@ -46,16 +46,13 @@ class LineStopPointsFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        Log.d("peter", "toward = ${viewModel.destination}")
-        Log.d("peter", "currentStation = ${viewModel.currentStationName}")
-        Log.d("peter", "currentTrainLocation = ${viewModel.currenLocation}")
 
+        // getting the lin sequence
         viewModel.lineSequence.observe(viewLifecycleOwner, Observer {
             it?.let {
                 it.stopPointSequence!!.forEach { point ->
                     viewModel.idMap = viewModel.putIntoMap(point.lines!!)
                 }
-                Log.d("peter", "the found array = ${viewModel.findLine(it.orderedLineRoutes!!)}")
                 adapter.submitList(viewModel.findLine(it.orderedLineRoutes!!))
             }
         })

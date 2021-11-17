@@ -9,10 +9,6 @@ import com.peter.pretest.data.source.PretestDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/**
- *
- * Concrete implementation of a Pretest source as a db.
- */
 
 class PretestLocalDataSource(val context: Context) : PretestDataSource {
 

@@ -78,17 +78,18 @@ class MainPageFragment : Fragment() {
         val adapter = StationAdapter()
         binding.recyclerView.adapter = adapter
         mainHandler = Handler(Looper.getMainLooper())
+
+        //Get the current location, return to default London point if out side of London
         viewModel.location.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (lon != it.longitude && lat != it.latitude) {
                     lon = it.longitude
                     lat = it.latitude
 
-                    Log.d("peter","the detected location lon = $lon lng = $lat")
 
 
                     if (viewModel.isMarkerOutsideCircle(51.52804,-0.12908,lat,lon,30000.0)) {
-                        Log.d("peter","it is outside")
+
                         viewModel.getNearByStation(51.52804,-0.12908,400)
                     }else{
                         viewModel.getNearByStation(it.latitude, it.longitude, 400)
@@ -99,12 +100,14 @@ class MainPageFragment : Fragment() {
         })
 
 
+        // Get arrival information for the stop
         viewModel.stationList.observe(viewLifecycleOwner, Observer { stationList ->
             stationList?.let {
                 viewModel.fetchArrivalInfo(it)
             }
         })
 
+        // For running request for every 30 seconds
         object : Runnable {
             override fun run() {
                 mainHandler.postDelayed(this, 30000)
@@ -115,6 +118,7 @@ class MainPageFragment : Fragment() {
             }
         }.also { updateTextTask = it }
 
+        // change the time format
         viewModel.arrivalInfo.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(viewModel.changeTimeFormat(it))
