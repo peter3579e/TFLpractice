@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/mainPageFragment">
+
+    <fragment
+        android:id="@+id/mainPageFragment"
+        android:name="com.peter.pretest.mainPage.MainPageFragment"
+        android:label="MainPageFragment" />
+
+    <fragment
+        android:id="@+id/lineStopPointsFragment"
+        android:name="com.peter.pretest.lineStopPoints.LineStopPointsFragment"
+        android:label="LineStopPointsFragment" >
+        <argument
+            android:name="lineName"
+            app:argType="string"/>
+        <argument
+            android:name="currentName"
+            app:argType="string"/>
+
+        <argument
+            android:name="toward"
+            app:argType="string"/>
+    </fragment>
+
+    <action android:id="@+id/navigate_to_linePoints_fragment" app:destination="@id/lineStopPointsFragment"/>
+
+</navigation>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="arrival"
+            type="com.peter.pretest.data.ArrivalandStation" />
+        <variable
+            name="stationName"
+            type="String" />
+
+
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_round_corner"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_chat_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/image"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_margin="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:elevation="4dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginLeft="20dp" >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:src="@drawable/logo_underground"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="60dp"
+                android:textColor="@color/black"
+                android:text="@{stationName}"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="@id/image"
+                app:layout_constraintBottom_toBottomOf="@id/image"
+                android:maxLines="2"
+                tools:text="Westminster station"
+                android:layout_marginLeft="60dp" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/hidden_box"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_chat_list"
+            app:layout_constraintStart_toStartOf="parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/hidden_line_cycle"
+            android:layout_width="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            tools:listitem="@layout/item_line_cells"
+            tools:ignore="MissingConstraints" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
